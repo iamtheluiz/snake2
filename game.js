@@ -11,6 +11,9 @@ const gameField  = document.getElementById("gameField");
 const fieldSizeX = 16;
 const fieldSizeY = 16;
 const pixelSize  = 40;  //Pixel size of the "style.css"
+let   snake      = [];  //Store the snake position
+let   snakeSize  = 3;
+
 
 /* Methods */
 
@@ -18,6 +21,8 @@ const pixelSize  = 40;  //Pixel size of the "style.css"
 function start(){
     renderGameField();
     resizeGameField();
+    spawnSnake();
+    renderSnake();
 }
 
 //Function for the game loop
@@ -47,6 +52,29 @@ function resizeGameField(){
     var sizeY = (fieldSizeY * pixelSize)+'px';
 
     gameField.style = `width: ${sizeX}; height: ${sizeY}`;
+}
+
+//Spawn the snake
+function spawnSnake(){
+    //Reset the "snake" var
+    snake = [];
+
+    //Loop on the snake initial size
+    for(var c = 0; c < snakeSize; c++){
+        
+        snake[c] = {
+            'x': fieldSizeX/2,
+            'y': (fieldSizeY/2)+c
+        };
+
+    }
+}
+
+//Render the snake
+function renderSnake(){
+    for(var c = 0; c < snakeSize; c++){
+        document.getElementById(`${snake[c].x}_${snake[c].y}`).setAttribute("class", "pixel pixel_snake");
+    }
 }
 
 //Start the game
