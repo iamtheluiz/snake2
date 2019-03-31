@@ -17,6 +17,11 @@ let   snakeDirection = {
     'x': 0,
     'y': -1
 }
+let   food       = {
+    'status': false,
+    'x': 0,
+    'y': 0
+}
 
 
 /* Methods */
@@ -26,14 +31,18 @@ function start(){
     renderGameField();
     resizeGameField();
     spawnSnake();
+    spawnFood();
+    eatFood();
     renderSnake();
 }
 
 //Function for the game loop
 function gameLoop(){
     //Here goes all the functions that have to be updated second by second
+    spawnFood();
     removeSnake();
     moveSnake();
+    eatFood();
     renderSnake();
 }
 
@@ -85,7 +94,6 @@ function renderSnake(){
             //If the snake hits its own body
             if(c != i){
                 if(snake[c].x == snake[i].x && snake[c].y == snake[i].y){
-                    console.log('ué');
                     snakeDeath();
                     return;
                 }
@@ -147,8 +155,64 @@ function changeDirection(key){
 
 //The Death of the Snake
 function snakeDeath(){
+    snake = null;
     alert("You lose!");
     window.location = "index.html";
+}
+
+//Spawn the food
+function spawnFood(){
+    //If the food isn't into the field
+    if(food.status == false){
+        food.status = true;
+        food.x = Math.floor(Math.random() * fieldSizeX + 1);
+        food.y = Math.floor(Math.random() * fieldSizeY + 1);
+
+        document.getElementById(`${food.x}_${food.y}`).setAttribute("class", "pixel food");
+    }else{
+        document.getElementById(`${food.x}_${food.y}`).setAttribute("class", "pixel food");
+    }
+}
+
+//Eat the food
+function eatFood(){
+    //If the snake eats a food
+    if(snake[0].x == food.x && snake[0].y == food.y){
+        food.status = false;
+
+        if(snake[snake.length - 1].x == snake[snake.length - 2].x){
+            snakeX = snake[snake.length - 1].x;
+            if(snake[snake.length - 1].y < snake[snake.length - 2].y){
+                snakeY = snake[snake.length - 1].y - 1;
+            }else{
+                snakeY = snake[snake.length - 1].y + 1;
+            }
+        }else if(snake[snake.length - 1].y == snake[snake.length - 2].y){
+            snakeY = snake[snake.length - 1].y;
+            if(snake[snake.length - 1].x < snake[snake.length - 2].x){
+                snakeX = snake[snake.length - 1].x - 1;
+            }else{
+                snakeX = snake[snake.length - 1].x + 1;
+            }
+        }
+
+        if(snakeX < 1){
+            snakeX = fieldSizeX;
+        }else if(snakeX > fieldSizeX){
+            snakeX = 1;
+        }
+
+        if(snakeY < 1){
+            snakeY = fieldSizeY;
+        }else if(snakeY > fieldSizeY){
+            snakeY = 1;
+        }
+
+        snake[snake.length] = {
+            'x': snakeX,
+            'y': snakeY
+        }
+    }
 }
 
 //Start the game
