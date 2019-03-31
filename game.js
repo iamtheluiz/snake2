@@ -78,8 +78,19 @@ function spawnSnake(){
 
 //Render the snake
 function renderSnake(){
-    for(var c = 0; c < snake.length; c++){
+    for(var c = snake.length - 1; c >= 0; c--){
         document.getElementById(`${snake[c].x}_${snake[c].y}`).setAttribute("class", "pixel pixel_snake");
+        
+        for(var i = snake.length - 1; i >= 0; i--){
+            //If the snake hits its own body
+            if(c != i){
+                if(snake[c].x == snake[i].x && snake[c].y == snake[i].y){
+                    console.log('ué');
+                    snakeDeath();
+                    return;
+                }
+            }
+        }
     }
 }
 
@@ -119,19 +130,25 @@ function moveSnake(){
 
 //Change the direction of the snake
 function changeDirection(key){
-    if(key == "ArrowUp"){
+    if(key == "ArrowUp" && (snakeDirection.x != 0 && snakeDirection != 1)){
         snakeDirection.x = 0;
         snakeDirection.y = -1;
-    }else if(key == "ArrowDown"){
+    }else if(key == "ArrowDown" && (snakeDirection.x != 0 && snakeDirection != -1)){
         snakeDirection.x = 0;
         snakeDirection.y = 1;
-    }else if(key == "ArrowLeft"){
+    }else if(key == "ArrowLeft" && (snakeDirection.x != 1 && snakeDirection != 0)){
         snakeDirection.x = -1;
         snakeDirection.y = 0;
-    }else if(key == "ArrowRight"){
+    }else if(key == "ArrowRight" && (snakeDirection.x != -1 && snakeDirection != 0)){
         snakeDirection.x = 1;
         snakeDirection.y = 0;
     }
+}
+
+//The Death of the Snake
+function snakeDeath(){
+    alert("You lose!");
+    window.location = "index.html";
 }
 
 //Start the game
